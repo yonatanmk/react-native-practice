@@ -33,6 +33,11 @@ const Home = ({route, navigation, screenProps}) => {
         title="Create post"
         onPress={() => navigation.navigate('CreatePost')}
       />
+      <Button title="Counter" onPress={() => navigation.navigate('Counter')} />
+      <Button
+        onPress={() => navigation.navigate('MyModal')}
+        title="Open Modal"
+      />
     </View>
   );
 };

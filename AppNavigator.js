@@ -1,16 +1,29 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Text} from 'react-native';
+import {Text, Button, View} from 'react-native';
 import Home from './Home';
 import Friends from './Friends';
 import DetailsScreen from './DetailsScreen';
 import CreatePostScreen from './CreatePostScreen';
+import Counter from './Counter';
 
-const Stack = createStackNavigator();
+const MainStack = createStackNavigator();
+const RootStack = createStackNavigator();
 
-const AppNavigator = ({screenProps}) => {
+function AppNavigator({screenProps}) {
   return (
-    <Stack.Navigator
+    <RootStack.Navigator mode="modal">
+      <RootStack.Screen name="Main" options={{headerShown: false}}>
+        {props => <MainStackScreen {...props} screenProps={screenProps} />}
+      </RootStack.Screen>
+      <RootStack.Screen name="MyModal" component={ModalScreen} />
+    </RootStack.Navigator>
+  );
+}
+
+const MainStackScreen = ({screenProps}) => {
+  return (
+    <MainStack.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: '#f4511e',
@@ -20,7 +33,7 @@ const AppNavigator = ({screenProps}) => {
           fontWeight: 'bold',
         },
       }}>
-      <Stack.Screen
+      <MainStack.Screen
         name="Home"
         options={{
           title: 'My home',
@@ -31,10 +44,17 @@ const AppNavigator = ({screenProps}) => {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
+          headerRight: () => (
+            <Button
+              onPress={() => alert('This is a button!')}
+              title="Info"
+              color="#fff"
+            />
+          ),
         }}>
         {props => <Home {...props} screenProps={screenProps} />}
-      </Stack.Screen>
-      <Stack.Screen
+      </MainStack.Screen>
+      <MainStack.Screen
         name="Details"
         options={({
           route: {
@@ -49,21 +69,35 @@ const AppNavigator = ({screenProps}) => {
           name: 'Details',
         }}>
         {props => <DetailsScreen {...props} screenProps={screenProps} />}
-      </Stack.Screen>
-      <Stack.Screen name="Friends">
+      </MainStack.Screen>
+      <MainStack.Screen name="Friends">
         {props => <Friends {...props} screenProps={screenProps} />}
-      </Stack.Screen>
-      <Stack.Screen
-        name="CreatePost"
-        options={{headerTitle: props => <LogoTitle {...props} />}}>
+      </MainStack.Screen>
+      <MainStack.Screen name="CreatePost">
         {props => <CreatePostScreen {...props} screenProps={screenProps} />}
-      </Stack.Screen>
-    </Stack.Navigator>
+      </MainStack.Screen>
+      <MainStack.Screen
+        name="Counter"
+        component={Counter}
+        options={({navigation, route}) => ({
+          headerTitle: props => <HeaderTitle {...props} />,
+        })}
+      />
+    </MainStack.Navigator>
   );
 };
 
-function LogoTitle() {
-  return <Text>Create Post Header Component</Text>;
+function HeaderTitle() {
+  return <Text>Screen Interaction</Text>;
+}
+
+function ModalScreen({navigation}) {
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text style={{fontSize: 30}}>This is a modal!</Text>
+      <Button onPress={() => navigation.goBack()} title="Dismiss" />
+    </View>
+  );
 }
 
 export default AppNavigator;
