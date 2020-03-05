@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
 
 export default function DetailsScreen({route, navigation}) {
-  const {itemId, itemIdFromScreen, otherParam} = route.params;
+  const {itemId, itemIdFromScreen, otherParam, detailsNumber} = route.params;
 
   useEffect(() => {
     setTimeout(() => navigation.setParams({itemId: 100}), 1000);
@@ -19,8 +19,13 @@ export default function DetailsScreen({route, navigation}) {
         onPress={() =>
           navigation.push('Details', {
             itemId: Math.floor(Math.random() * 100),
+            detailsNumber: detailsNumber + 1,
           })
         }
+      />
+      <Button
+        title="Update the title"
+        onPress={() => navigation.setOptions({title: 'Updated!'})}
       />
       <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
